@@ -246,11 +246,137 @@ class Model:
     * Loan methods *
     ****************
     """
+    def create_loan(self, id_user, initdate, expdate):
+        try: 
+            sql = 'INSERT INTO loans (`id_user`, `loan_date`, `expiration_date`) VALUES (%s, %s, %s)'
+            vals = (id_user, initdate, expdate)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            id_loan = self.cursor.lastrowid
+            return id_loan
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+    
+    def read_a_loan(self, id_loan):
+        try:
+            sql = 'SELECT loans.*,users.*,zips.* FROM loans JOIN users ON users.id_user = loans.id_user and loans.id_loan = %s JOIN zips ON zips.zip = users.u_zip'
+            vals = (id_loan,)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
+            return err
 
+    def read_all_loans(self):
+        try:
+            sql = 'SELECT loans.*,users.*,zips.* FROM loans JOIN users ON users.id_user = loans.id_user JOIN zips ON zips.zip = users.u_zip'
+            self.cursor.execute(sql)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+    
+    def read_loans_loandate(self, initdate):
+        try:
+            sql = ' SELECT loans.*, users.*, zips.* FROM loans JOIN users ON users.id_user = loans.id_user and loans.loan_date = %s JOIN zips ON zips.zip = users.u_zip'
+            vals = (initdate,)
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+    
+    def read_loans_users(self, id_user):
+        try:
+            sql = ' SELECT loans.*, users.*, zips.* FROM loans JOIN users ON users.id_user = loans.id_user and loans.id_client = %s JOIN zips ON zips.zip = users.u_zip'
+            vals = (id_user,)
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
 
+    def update_loan(self, fields, vals):
+        try:
+            sql = 'UPDATE loans SET'+','.join(fields)+'WHERE id_loan = %s'
+            self.cursor.execute(sql,vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
 
+    def delete_loan(self, id_loan):
+        try:
+            sql = 'DELETE FROM loans WHERE id_loan = %s'
+            vals = (id_loan,)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            count = self.cursor.rowcount
+            return count
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
 
+    """
+    ****************
+    * Loan details methods *
+    ****************
+    """
 
+    def create_loan_detail(self, id_loan, isbn, status, delivery):
+        try: 
+            sql = 'INSERT INTO loans_details (`id_loan`, `isbn`, `lds_status`, `delivery_date`) VALUES (%s, %s, %s, %s)'
+            vals = (id_loan, isbn, status, delivery)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def read_a_loans_detail(self, id_loan, isbn):
+        try:
+            sql = 'SELECT books.isbn, books.b_title, books.b_author, books.b_editorial, books.edition, books.b_publidate, books.b_category, books.b_description, books.b_language, books.b_pages, books.b_shelving, books.b_quantity, loans_details.lds_status, loans_details.delivery_date FROM loans_details JOIN books ON loans_details.isbn = books.isbn and loans_details.id_loan = %s and loan_details.isbn = %s'
+            vals = (id_loan,isbn)
+            self.cursor.execute(sql, vals)
+            record = self.cursor.fetchone()
+            return record
+        except connector.Error as err:
+            return err
+
+    def read_loan_details(self, id_loan):
+        try:
+            sql = 'SELECT books.isbn, books.b_title, books.b_author, books.b_editorial, books.edition, books.b_publidate, books.b_category, books.b_description, books.b_language, books.b_pages, books.b_shelving, books.b_quantity, loans_details.lds_status, loans_details.delivery_date FROM loans_details JOIN books ON loans_details.isbn = books.isbn and loans_details.id_loan = %s'
+            vals = (id_loan,)
+            self.cursor.execute(sql, vals)
+            records = self.cursor.fetchall()
+            return records
+        except connector.Error as err:
+            return err
+
+    def update_loan_details(self, fields, vals):
+        try:
+            sql = 'UPDATE loans_details SET'+','.join(fields)+'WHERE id_loan = %s and isbn = %s'
+            self.cursor.execute(sql,vals)
+            self.cnx.commit()
+            return True
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
+
+    def delete_loan_details(self, id_loan, isbn):
+        try:
+            sql = 'DELETE FROM loans_details WHERE id_loan = %s and isbn = %s'
+            vals = (id_loan, isbn)
+            self.cursor.execute(sql, vals)
+            self.cnx.commit()
+            count = self.cursor.rowcount
+            return count
+        except connector.Error as err:
+            self.cnx.rollback()
+            return err
 
 
 
