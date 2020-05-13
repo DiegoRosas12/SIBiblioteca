@@ -1,0 +1,4 @@
+user:thecrew
+password:jcrules98
+host:localhost
+database:library_db
