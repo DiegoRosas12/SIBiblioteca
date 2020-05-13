@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS loans(
     id_user INT NOT NULL,
     loan_date DATE NOT NULL,
     expiration_date DATE NOT NULL,
+    lds_status ENUM('UNDELIVERED','DELIVERED','LATE') NOT NULL,
     PRIMARY KEY(id_loan),
     CONSTRAINT fkuser_loans FOREIGN KEY(id_user)
 		REFERENCES users(id_user)
@@ -65,7 +66,6 @@ CREATE TABLE IF NOT EXISTS loans(
 CREATE TABLE IF NOT EXISTS loans_details(
 	id_loan INT NOT NULL,
     isbn INT NOT NULL,
-    lds_status ENUM('UNDELIVERED','DELIVERED','LATE') NOT NULL,
     delivery_date DATE,
     PRIMARY KEY(id_loan, isbn),
     CONSTRAINT fkloan_lds FOREIGN KEY(id_loan)
@@ -77,4 +77,6 @@ CREATE TABLE IF NOT EXISTS loans_details(
         ON DELETE CASCADE
         ON UPDATE CASCADE
 )ENGINE = INNODB;
+
+
 

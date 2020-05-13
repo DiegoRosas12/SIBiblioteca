@@ -248,7 +248,7 @@ class Model:
     """
     def create_loan(self, id_user, initdate, expdate):
         try: 
-            sql = 'INSERT INTO loans (`id_user`, `loan_date`, `expiration_date`) VALUES (%s, %s, %s)'
+            sql = 'INSERT INTO loans (`id_user`, `loan_date`, `expiration_date`,`lds_status`) VALUES (%s, %s, %s, %s)'
             vals = (id_user, initdate, expdate)
             self.cursor.execute(sql, vals)
             self.cnx.commit()
@@ -327,7 +327,7 @@ class Model:
 
     def create_loan_detail(self, id_loan, isbn, status, delivery):
         try: 
-            sql = 'INSERT INTO loans_details (`id_loan`, `isbn`, `lds_status`, `delivery_date`) VALUES (%s, %s, %s, %s)'
+            sql = 'INSERT INTO loans_details (`id_loan`, `isbn`, `delivery_date`) VALUES (%s, %s, %s)'
             vals = (id_loan, isbn, status, delivery)
             self.cursor.execute(sql, vals)
             self.cnx.commit()
@@ -338,7 +338,7 @@ class Model:
 
     def read_a_loans_detail(self, id_loan, isbn):
         try:
-            sql = 'SELECT books.isbn, books.b_title, books.b_author, books.b_editorial, books.edition, books.b_publidate, books.b_category, books.b_description, books.b_language, books.b_pages, books.b_shelving, books.b_quantity, loans_details.lds_status, loans_details.delivery_date FROM loans_details JOIN books ON loans_details.isbn = books.isbn and loans_details.id_loan = %s and loan_details.isbn = %s'
+            sql = 'SELECT books.isbn, books.b_title, books.b_author, books.b_editorial, books.edition, books.b_publidate, books.b_category, books.b_description, books.b_language, books.b_pages, books.b_shelving, books.b_quantity, loans_details.delivery_date FROM loans_details JOIN books ON loans_details.isbn = books.isbn and loans_details.id_loan = %s and loan_details.isbn = %s'
             vals = (id_loan,isbn)
             self.cursor.execute(sql, vals)
             record = self.cursor.fetchone()
@@ -348,7 +348,7 @@ class Model:
 
     def read_loan_details(self, id_loan):
         try:
-            sql = 'SELECT books.isbn, books.b_title, books.b_author, books.b_editorial, books.edition, books.b_publidate, books.b_category, books.b_description, books.b_language, books.b_pages, books.b_shelving, books.b_quantity, loans_details.lds_status, loans_details.delivery_date FROM loans_details JOIN books ON loans_details.isbn = books.isbn and loans_details.id_loan = %s'
+            sql = 'SELECT books.isbn, books.b_title, books.b_author, books.b_editorial, books.edition, books.b_publidate, books.b_category, books.b_description, books.b_language, books.b_pages, books.b_shelving, books.b_quantity, loans_details.delivery_date FROM loans_details JOIN books ON loans_details.isbn = books.isbn and loans_details.id_loan = %s'
             vals = (id_loan,)
             self.cursor.execute(sql, vals)
             records = self.cursor.fetchall()
