@@ -246,7 +246,7 @@ class Model:
     * Loan methods *
     ****************
     """
-    def create_loan(self, id_user, initdate, expdate):
+    def create_loan(self, id_user, initdate, expdate, lstatus):
         try: 
             sql = 'INSERT INTO loans (`id_user`, `loan_date`, `expiration_date`,`lds_status`) VALUES (%s, %s, %s, %s)'
             vals = (id_user, initdate, expdate)
@@ -325,7 +325,7 @@ class Model:
     ****************
     """
 
-    def create_loan_detail(self, id_loan, isbn, status, delivery):
+    def create_loan_detail(self, id_loan, isbn, delivery):
         try: 
             sql = 'INSERT INTO loans_details (`id_loan`, `isbn`, `delivery_date`) VALUES (%s, %s, %s)'
             vals = (id_loan, isbn, status, delivery)

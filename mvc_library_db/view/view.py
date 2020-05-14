@@ -217,4 +217,13 @@ class View:
     *************************************
     """ 
 
-    def show
+    def show_a_loan_details(self, record):
+        print(f'{record[0]:<13}|{record[1]:<40}|{record[2]:<40}|{record[3]:<50}')
+
+    def show_loan_details_header(self):
+        print('-'*81)
+        print('ID'.ljust(13)+'|'+'Libro'.ljust(40)+'|'+'Autor'.ljust(40)+'|'+'Entregado'.ljust(50))
+        print('-'*81)
+
+    def show_loan_details_footer(self):
+        print('-'*81)
