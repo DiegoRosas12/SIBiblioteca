@@ -1,5 +1,4 @@
-from model.model import Model
+from controller.controller import Controller
 
-m = Model()
-print('Sucess')
-m.close_db()
+c = Controller()
+c.start()
