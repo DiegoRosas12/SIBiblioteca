@@ -328,7 +328,7 @@ class Model:
     def create_loan_detail(self, id_loan, isbn, delivery):
         try: 
             sql = 'INSERT INTO loans_details (`id_loan`, `isbn`, `delivery_date`) VALUES (%s, %s, %s)'
-            vals = (id_loan, isbn, status, delivery)
+            vals = (id_loan, isbn, delivery)
             self.cursor.execute(sql, vals)
             self.cnx.commit()
             return True
