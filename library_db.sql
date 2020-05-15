@@ -1,5 +1,5 @@
 # Definition of the schema of the DB
-# This s a DB for managing information about a library
+# This is a DB for managing information about a library
 
 # Create the DB
 CREATE DATABASE IF NOT EXISTS library_db;

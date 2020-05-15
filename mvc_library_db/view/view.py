@@ -218,7 +218,7 @@ class View:
     """ 
 
     def show_a_loan_details(self, record):
-        print(f'{record[0]:<13}|{record[1]:<40}|{record[2]:<40}|{record[3]:<50}')
+        print(f'{record[0]:<13}|{record[1]:<40}|{record[2]:<40}|{record[3]}')
 
     def show_loan_details_header(self):
         print('-'*81)

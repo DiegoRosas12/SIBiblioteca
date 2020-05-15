@@ -244,7 +244,7 @@ class Controller:
         isbn, title, author, edit, edition, pubdate, category, descrip, language, nopages, estant, quan = self.ask_book()
         out = self.model.create_book(isbn, title, author, edit, edition, pubdate, category, descrip, language, nopages, estant, quan)
         if out == True:
-            self.view.ok(title+' '+author, 'agrego')
+            self.view.ok(title+' de '+author, 'agrego')
         else:
             self.view.error('No se pudo agregar el libro.')
         return
@@ -296,9 +296,9 @@ class Controller:
         pages_min = input()
         self.view.ask('Paginas maximo: ')
         pages_max = input()
-        books = self.model.read_books_pages_range(float(pages_min), float(pages_max))
+        books = self.model.read_books_pages_range(int(pages_min), int(pages_max))
         if type(books) == list:
-            self.view.show_book_header(' Productos entre '+pages_min+' y '+pages_max+' ')
+            self.view.show_book_header(' Productos entre '+pages_min+' y '+pages_max+' paginas ')
             for book in books:
                 self.view.show_a_book(book)
                 self.view.show_book_midder()
@@ -320,7 +320,7 @@ class Controller:
             if book == None:
                 self.view.error('El libro no existe')
             else:
-                self.view.error('Error al bsucar y leer el libro')
+                self.view.error('Error al buscar y leer el libro')
             return
         self.view.msg('Ingresa los valores a modificar (vacio para dejarlo igual):')
         whole_vals = self.ask_book()
@@ -401,8 +401,8 @@ class Controller:
         return [name,lname1,lname2,email,phone,street,noext,noint,col,zip]
 
     def create_user(self):
-        name, lname1 ,lname2 , email, phone, street, noext, noint, col, zip = self.ask_user()
-        out = self.model.create_user(name, lname1, lname2, street, noext, noint, col, zip, email, phone)
+        name, lname1, lname2, email, phone, street, noext, noint, col, zip = self.ask_user()
+        out = self.model.create_user(name, lname1, lname2, email, phone, street, noext, noint, col, zip)
         if out == True:
             self.view.ok(name+' '+lname1+' '+lname2, 'agrego')
         else:
@@ -551,18 +551,18 @@ class Controller:
         id_loan = input()
         loan = self.model.read_a_loan(id_loan)
         if type(loan) == tuple:
+            self.view.show_loan_header(' Datos de la orden '+id_loan+' ')
+            self.view.show_loan(loan)
             loan_details = self.model.read_loan_details(id_loan)
-            if type(loan_details) != list and loan_details != None:
-                self.view.error('Error al leer el prestamo')
-            else:
-                self.view.show_loan_header(' Datos de la orden '+id_loan+' ')
-                self.view.show_loan(loan)
+            if loan_details != None and type(loan_details) == list:
                 self.view.show_loan_details_header()
                 for loan_detail in loan_details:
                     self.view.show_a_loan_details(loan_detail)
                 self.view.show_loan_details_footer()
-                self.view.show_loan_footer()
-                return loan
+                self.view.show_loan_footer()                
+            else:
+                self.view.error('No existen detalles de prestamo')
+            return loan
         else:
             if loan == None:
                 self.view.error('El prestamo no existe')
@@ -577,15 +577,14 @@ class Controller:
             for loan in loans:
                 id_loan = loan[0]
                 loan_details = self.model.read_loan_details(id_loan)
-                if type(loan_details) != list and loan_details != None:
-                    self.view.error('PROBLEMA AL LEER LA ORDEN '+id_loan+'. REVISA.')
-                else:
-                    self.view.show_loan(loan)
+                if loan_details != None and type(loan_details) == list:
                     self.view.show_loan_details_header()
                     for loan_detail in loan_details:
                         self.view.show_a_loan_details(loan_detail)
                     self.view.show_loan_details_footer()
-                    self.view.show_loan_midder()
+                    self.view.show_loan_footer()                
+                else:
+                    self.view.error('No existen detalles para el prestamo {}'.format(id_loan))
             self.view.show_loan_footer()
         else:
             self.view.error('Error al leer los prestamos')
@@ -600,15 +599,14 @@ class Controller:
             for loan in loans:
                 id_loan = loan[0]
                 loan_details = self.model.read_loan_details(id_loan)
-                if type(loan_details) != list and loan_details != None:
-                    self.view.error('Error al leer el prestamo '+id_loan+'. REVISA.')
-                else:
-                    self.view.show_loan(loan)
+                if loan_details != None and type(loan_details) == list:
                     self.view.show_loan_details_header()
                     for loan_detail in loan_details:
                         self.view.show_a_loan_details(loan_detail)
                     self.view.show_loan_details_footer()
-                    self.view.show_loan_midder()
+                    self.view.show_loan_footer()                
+                else:
+                    self.view.error('No existen detalles para el prestamo {}'.format(id_loan))
             self.view.show_loan_footer()
         else:
             self.view.error('Error al leer los prestamo')
@@ -623,15 +621,14 @@ class Controller:
             for loan in loans:
                 id_loan = loan[0]
                 loan_details = self.model.read_loan_details(id_loan)
-                if type(loan_details) != list and loan_details != None:
-                    self.view.error('Error al leer la orden '+id_loan+'. REVISA.')
-                else:
-                    self.view.show_loan(loan)
+                if loan_details != None and type(loan_details) == list:
                     self.view.show_loan_details_header()
                     for loan_detail in loan_details:
                         self.view.show_a_loan_details(loan_detail)
                     self.view.show_loan_details_footer()
-                    self.view.show_loan_midder()
+                    self.view.show_loan_footer()                
+                else:
+                    self.view.error('No existen detalles para el prestamo {}'.format(id_loan))
             self.view.show_loan_footer()
         else:
             self.view.error('Error al leer los prestamos.')
@@ -702,7 +699,7 @@ class Controller:
                 deli_date = input()
                 out = self.model.create_loan_detail(id_loan, isbn, deli_date)
                 if out == True:
-                    self.view.ok(book[1]+' '+book[2], 'agrego a la orden')
+                    self.view.ok(book[1]+' de '+book[2], 'agrego a la orden')
                 else:
                     if out.errno == 1062:
                         self.view.error('El libro ya está en la orden')
@@ -723,7 +720,7 @@ class Controller:
             while isbn != '':
                 self.view.msg('---- Agrega libros al prestamo (deja vacio el id del libro para salir) ---')
                 isbn = self.create_loan_details(id_loan)
-            self.model.update_loan((),(id_loan))
+            #self.model.update_loan((),(id_loan))
         return
 
     def update_loan_details(self):
@@ -741,7 +738,7 @@ class Controller:
                         book = self.model.read_a_book(isbn)
                         self.view.ask('Fecha Entregado: ')
                         deli_date = input()
-                        fields, whole_vals = self.update_lists(['deli_date'],[deli_date])
+                        fields, whole_vals = self.update_lists(['delivery_date'],[deli_date])
                         whole_vals.append(id_loan)
                         whole_vals.append(isbn)
                         self.model.update_loan_details(fields, whole_vals)
